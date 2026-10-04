@@ -9,6 +9,14 @@ each opening its own info panel.
 
 ---
 
+## Demo
+
+[![Hotspot on Map — demo](assets/demo.gif)](assets/demo.mp4)
+
+*Click the animation for the full-quality recording → [`assets/demo.mp4`](assets/demo.mp4) (14s).*
+
+---
+
 ## What it does
 
 - Hotspots positioned by percentage coordinates, so the map scales cleanly at any size
@@ -37,6 +45,17 @@ The version history in the file header reads like a list of things you only find
 - This is a **snippet**, not an installable plugin. No activation flow, no wp.org release.
 - **No installation guide. No support. No portability guarantee.**
 - Code assumes an Elementor-based WordPress stack and our own conventions.
+
+---
+
+## Assets
+
+| File | Purpose |
+|---|---|
+| `assets/world-map.svg` | Default world map (1675×1082) used as the widget's base image |
+| `assets/demo.gif` | Demo animation (embedded above) |
+| `assets/demo.mp4` | Full-quality demo recording — 14s |
+| `assets/logo.png` | Brand mark |
 
 ---
 

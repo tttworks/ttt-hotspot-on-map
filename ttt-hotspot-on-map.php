@@ -79,7 +79,7 @@ add_action( 'elementor/widgets/register', function ( $widgets_manager ) {
         protected function register_controls() {
 
             $this->start_controls_section( 'section_map', [ 'label' => '地图设置', 'tab' => \Elementor\Controls_Manager::TAB_CONTENT ] );
-            $this->add_control( 'map_image', [ 'label' => '世界地图 SVG', 'type' => \Elementor\Controls_Manager::MEDIA, 'default' => [ 'url' => 'https://example.com/wp-content/uploads/2026/06/图片1-2.svg' ] ] );
+            $this->add_control( 'map_image', [ 'label' => '世界地图 SVG', 'type' => \Elementor\Controls_Manager::MEDIA, 'default' => [ 'url' => 'https://raw.githubusercontent.com/tttworks/ttt-hotspot-on-map/main/assets/world-map.svg' ] ] );
             $this->end_controls_section();
 
             $this->start_controls_section( 'section_hotspots', [ 'label' => '热点标记', 'tab' => \Elementor\Controls_Manager::TAB_CONTENT ] );
@@ -101,7 +101,7 @@ add_action( 'elementor/widgets/register', function ( $widgets_manager ) {
                 'label' => '热点列表', 'type' => \Elementor\Controls_Manager::REPEATER, 'fields' => $repeater->get_controls(),
                 'title_field' => '{{{ hotspot_label }}} ({{{ hotspot_type }}})',
                 'default' => [
-                    [ 'hotspot_label' => '上海', 'hotspot_type' => 'center', 'location_preset' => 'shanghai', 'hotspot_icon' => [ 'url' => 'https://example.com/wp-content/uploads/2026/06/Vector-5.png' ], 'location_x' => [ 'size' => 72.10 ], 'location_y' => [ 'size' => 38.00 ] ],
+                    [ 'hotspot_label' => '上海', 'hotspot_type' => 'center', 'location_preset' => 'shanghai', 'hotspot_icon' => [ 'url' => '' ], 'location_x' => [ 'size' => 72.10 ], 'location_y' => [ 'size' => 38.00 ] ],
                     [ 'hotspot_label' => '亚洲', 'hotspot_type' => 'spoke',  'location_preset' => 'asia',    'location_x' => [ 'size' => 68.00 ], 'location_y' => [ 'size' => 38.00 ], 'connect_to' => '上海', 'curve_curvature' => [ 'size' => 10 ], 'curve_bend' => 'forward' ],
                 ],
             ] );
