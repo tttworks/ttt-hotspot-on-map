@@ -1,0 +1,96 @@
+/**
+ * ============================================
+ * TTT Hotspot on Map - CSS
+ * @version     1.0.20
+ * @description 手机端溢出防线: marker-layer max-width约束+overflow-x:hidden; zhkm-map-outer防滚动条
+ * ============================================
+ */
+
+add_action( 'wp_head', function() {
+?>
+<style>
+/* ── 根因修复：Elementor 默认 column-gap 20px → 每列 10px 内容 padding ── */
+/* 标签文字越界后被列边界裁剪，必须在 widget wrapper 层级也开启 overflow */
+.elementor-widget-ttt_hotspot_on_map,
+.elementor-widget-ttt_hotspot_on_map > .elementor-widget-container {
+    overflow: visible !important;
+    contain: layout;
+}
+
+.zhom-map-outer{position:relative;width:100%;overflow:visible;max-width:100%}
+.zhom-map-wrapper{position:relative;width:100%;overflow:visible;border-radius:0;max-width:100%}
+.zhom-map-image{display:block;width:100%;height:auto;position:relative;z-index:1}
+.zhom-overlay{position:absolute;top:0;left:0;width:100%;height:100%;z-index:2;pointer-events:none;overflow:visible}
+.zhom-orbit-layer{position:absolute;top:0;left:0;width:100%;height:100%;z-index:3;pointer-events:none;overflow:visible}
+.zhom-markers-layer{position:absolute;top:0;left:0;width:100%;height:100%;z-index:4;pointer-events:none;overflow:visible}
+.zhom-marker{position:absolute;transform:translate(-50%,-50%);pointer-events:auto;cursor:pointer;display:flex;align-items:center;gap:8px}
+.zhom-marker.zhom-label-right{flex-direction:row}
+.zhom-marker.zhom-label-left{flex-direction:row-reverse}
+.zhom-marker.zhom-label-bottom{flex-direction:column}
+.zhom-marker.zhom-label-top{flex-direction:column-reverse}
+.zhom-marker.zhom-label-bottom,.zhom-marker.zhom-label-top{gap:4px}
+.zhom-icon-anchor{position:relative;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
+.zhom-marker-icon{position:relative;z-index:3;display:flex;align-items:center;justify-content:center}
+.zhom-marker-dot{position:relative;width:14px;height:14px;border-radius:50%;background-color:#59A498;box-shadow:0 2px 6px rgba(0,0,0,0.2);flex-shrink:0;box-sizing:border-box}
+.zhom-marker-dot::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:6px;height:6px;border-radius:50%;background-color:#fff}
+.zhom-marker-icon img{width:24px;height:24px;object-fit:contain;display:block;position:relative;z-index:3}
+.zhom-pulse-wrap{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:1;pointer-events:none}
+.zhom-pulse-ring{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:36px;height:36px;border-radius:50%;background-color:rgba(89,164,152,0.35)}
+.zhom-pulse-ring::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:36px;height:36px;border-radius:50%;background-color:inherit;animation:zhom-pulse-anim 2.5s ease-out infinite}
+@keyframes zhom-pulse-anim{0%{transform:translate(-50%,-50%) scale(1);opacity:1}100%{transform:translate(-50%,-50%) scale(var(--zhom-pulse-scale, 2.2));opacity:0}}
+.zhom-marker-label{background-color:rgba(255,255,255,0.92);color:#333;font-family:"Montserrat",Sans-serif;font-size:13px;font-weight:500;line-height:1.4;padding:4px 10px;margin:0;border-radius:4px;white-space:normal;pointer-events:none;max-width:200px;overflow-wrap:break-word;word-break:break-word;hyphens:auto;opacity:1}
+.zhom-marker.zhom-label-right .zhom-marker-label,.zhom-marker.zhom-label-left .zhom-marker-label{flex-shrink:1;flex-basis:auto}
+.zhom-marker.zhom-label-right,.zhom-marker.zhom-label-left{align-items:flex-start}
+.zhom-curve{transition:stroke 0.3s ease,stroke-width 0.3s ease}
+.zhom-curve-hover{stroke-width:2!important;stroke:rgba(1,51,61,0.5)!important;stroke-dasharray:none!important}
+.zhom-orbit-trail{}
+.zhom-orbit-dot,.zhom-orbit-glow{transition:opacity 0.15s ease}
+.zhom-info-popup{position:absolute;bottom:calc(100% + 16px);left:50%;transform:translateX(-50%);background-color:#fff;padding:12px 16px;border-radius:8px;min-width:200px;max-width:320px;z-index:100;display:none;font-size:13px;color:#333;line-height:1.5;pointer-events:auto}
+.zhom-info-popup.zhom-popup-visible{display:block}
+.zhom-info-popup::after{content:'';position:absolute;bottom:-8px;left:50%;transform:translateX(-50%);border-width:8px 6px 0;border-style:solid;border-color:#fff transparent transparent}
+.zhom-info-popup h1,.zhom-info-popup h2,.zhom-info-popup h3,.zhom-info-popup h4,.zhom-info-popup h5,.zhom-info-popup h6{margin-top:0;margin-bottom:6px;font-weight:600}
+.zhom-info-popup p{margin-top:0;margin-bottom:6px}
+.zhom-info-popup p:last-child{margin-bottom:0}
+.zhom-marker.zhom-hover .zhom-marker-dot{transform:scale(1.3);transition:transform 0.2s ease}
+.zhom-marker.zhom-hover .zhom-marker-icon img{transform:scale(1.15);transition:transform 0.2s ease}
+.zhom-marker.zhom-draggable{cursor:grab}
+.zhom-marker.zhom-dragging{cursor:grabbing;z-index:999!important;opacity:0.85}
+.zhom-drag-tip{position:absolute;top:-28px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.75);color:#fff;font-size:11px;padding:3px 8px;border-radius:3px;white-space:nowrap;pointer-events:none;display:block}
+.zhom-save-btn{margin-left:6px;padding:2px 8px;background:#59A498;color:#fff;border:none;border-radius:3px;font-size:11px;cursor:pointer;pointer-events:auto;line-height:1.2}
+.zhom-save-btn:hover{background:#01333d}
+.zhom-tip-text{vertical-align:middle}
+@media (max-width:1024px){
+.zhom-marker-dot{width:12px;height:12px}
+.zhom-marker-dot::after{width:5px;height:5px}
+.zhom-marker-icon img{width:20px;height:20px}
+.zhom-marker-label{font-size:12px;padding:3px 8px;max-width:160px;white-space:normal;overflow-wrap:break-word;word-break:break-word}
+.zhom-pulse-ring{width:30px;height:30px}
+.zhom-pulse-ring::after{width:30px;height:30px}
+.zhom-info-popup{max-width:260px;padding:10px 14px;font-size:12px}
+.zhom-drag-tip{font-size:10px;top:-24px}
+}
+@media (max-width:767px){
+/* 手机端负边距吃掉 Elementor 列间距，标签越界不裁剪 */
+.zhom-map-outer{margin-left:-10px;margin-right:-10px;width:calc(100% + 20px)}
+/* 防线：所有层级强制约束最大宽度，杜绝水平滚动条 */
+.zhom-map-wrapper,
+.zhom-map-image,
+.zhom-overlay,
+.zhom-orbit-layer,
+.zhom-markers-layer {max-width:100%}
+.zhom-marker{max-width:90vw}
+.zhom-marker-label{max-width:min(120px,30vw)!important}
+.zhom-marker{gap:4px}
+.zhom-marker.zhom-label-bottom,.zhom-marker.zhom-label-top{gap:2px}
+.zhom-marker-dot{width:10px;height:10px}
+.zhom-marker-dot::after{width:4px;height:4px}
+.zhom-marker-icon img{width:16px;height:16px}
+.zhom-marker-label{font-size:11px;padding:2px 6px;max-width:120px;white-space:normal;overflow-wrap:break-word;word-break:break-word}
+.zhom-pulse-ring{width:24px;height:24px}
+.zhom-pulse-ring::after{width:24px;height:24px}
+.zhom-info-popup{max-width:220px;padding:8px 12px;font-size:12px}
+.zhom-drag-tip{font-size:9px;top:-20px}
+}
+</style>
+<?php
+});
