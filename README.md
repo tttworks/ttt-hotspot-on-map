@@ -4,6 +4,8 @@
 
 # TTT Hotspot on Map for Elementor
 
+**English** | [中文](README.zh-CN.md) | [日本語](README.ja.md)
+
 **An interactive hotspot map widget for Elementor** — place markers on a custom map image,
 each opening its own info panel.
 
@@ -17,82 +19,43 @@ each opening its own info panel.
 
 ---
 
-## What it does
+## What this widget can do
 
-- Hotspots positioned by percentage coordinates, so the map scales cleanly at any size
-- Two marker types — **center** and **edge** — with different behaviours
-- Per-hotspot label, icon and content block
-- Location presets plus free positioning
-- Configurable marker animation
+A reference for how far an Elementor custom widget can be taken — it behaves like a small
+application rather than a static image with pins.
 
----
+### Authoring experience
 
-## What this snippet demonstrates
+- **Drag-to-place markers** — position hotspots by dragging them on the canvas in the editor,
+  then save with one click. No typing coordinates.
+- **Extend without limits** — the hotspot collection is fully user-managed: add, remove and
+  reorder entries directly in the panel.
+- **Contextual controls** — advanced options stay hidden until the feature they belong to is
+  switched on, so the panel never overwhelms the person editing.
+- **Independent responsive values** — desktop, tablet and mobile each keep their own settings
+  for every dimension you can adjust.
+- **Loads only where used** — the widget's styles and scripts are enqueued only on pages that
+  actually contain it, leaving the rest of the site untouched.
 
-This is not only a hotspot widget — it is a reference for **how far a custom Elementor
-widget can be pushed**. Everything below is implemented in the 633 lines in this repository.
+### Visual and interaction
 
-### 1. Elementor widget API surface covered
+- **Curved links between hotspots** — connect markers to one another and control the curve's
+  bend and direction from the panel. Real adjustable curves, not fixed arcs.
+- **Orbiting marker animation** — markers can travel around the map with configurable
+  direction, scheduling (all at once or one by one), speed behaviour, glow, and a styled
+  motion trail.
+- **Scale-proof positioning** — markers are anchored to the map image itself and re-project
+  on every resize, container change or breakpoint switch, so layouts never drift.
+- **Pulsing attention rings** — whose scale is controlled from the panel.
+- **Hover states** built in for both markers and icons.
 
-| Capability | How it's implemented here |
-|---|---|
-| Widget metadata | `get_name` / `get_title` / `get_icon` (`eicon-map-pin`) / `get_categories` / `get_keywords` |
-| **Conditional asset loading** | `get_style_depends()` + `get_script_depends()` — CSS and JS load **only on pages where the widget is actually used**, never site-wide |
-| Content / Style tab split | 12 control sections across 6 × `TAB_CONTENT` and 6 × `TAB_STYLE` |
-| **Conditional control display** | 10 × `condition` — a control appears only when the toggle that governs it is on |
-| **Responsive controls** | 8 × `add_responsive_control()` — independent desktop / tablet / mobile values |
-| **Repeater** | 1 × `Controls_Manager::REPEATER` — the hotspot collection is fully user-extensible (add / remove / reorder) |
-| Front-end render | `render()` emits markup, then JS re-initialises it so the **editor preview stays live** |
+### Engineering quality
 
-### 2. Control types exercised — 12 kinds
-
-| Type | Count | What it drives in this widget |
-|---|---:|---|
-| `SLIDER` | **25** | X/Y coordinates, curve curvature, orbit speed, dot size, border width, radius, spacing |
-| `COLOR` | **13** | marker, label, panel, border, trail, glow |
-| `SELECT` | 10 | curve direction, orbit mode, ordering, speed mode, preset locations |
-| `SWITCHER` | 6 | label / pulse / orbit / panel / glow toggles |
-| `DIMENSIONS` | 4 | padding, margin and radius groups |
-| `TEXT` / `TEXTAREA` | 3 | hotspot labels and panel copy |
-| `MEDIA` | 2 | base map image, hotspot icon |
-| `REPEATER` | 1 | the hotspot list itself |
-
-### 3. Front-end behaviour (JS, 255 lines)
-
-**Percentage positioning that survives any resize.**
-Markers are stored as a percentage of the base image and converted to pixels at runtime
-against the image's *rendered* rectangle — so positions hold when the container resizes,
-the image scales, or the breakpoint changes. No fixed pixel coordinates anywhere.
-
-**Bezier curve connections between hotspots.**
-Hotspots can link to one another by name. The link is drawn as a curve whose **curvature
-is a panel slider** (expressed in multiples of the standard arc) with a direction toggle —
-i.e. real, user-controlled bezier geometry rather than a hard-coded arc.
-
-**An orbit animation system.**
-Animated markers orbit the map, driven by `requestAnimationFrame`, with:
-
-- two motion modes plus `spoke_to_center` direction handling
-- **simultaneous or sequential** scheduling, and clockwise / counter-clockwise ordering
-- uniform or variable speed
-- configurable dot size, glow, and **trail style / colour / width**
-- explicit z-index layering (overlay `2` / marker `3` / orbit `4`) so layers never fight
-
-**Drag-to-place inside the editor.**
-In edit mode each marker becomes draggable with a *save coordinates* affordance — positions
-are authored visually and written back into the control, instead of being typed as numbers.
-
-**Editor-preview safe.**
-Elementor re-renders the widget on every control change. The JS re-initialises cleanly each
-time — no leaked listeners, no duplicated markers.
-
-### 4. Styling approach (CSS, 96 lines)
-
-- Colours, sizes and the pulse scale are written from widget settings as **CSS custom
-  properties** — the stylesheet contains no hard-coded visual values
-- The pulse ring is a single `@keyframes` parameterised by `--zhom-pulse-scale`
-- Hover states and transitions live in CSS, not JS
-- **Vanilla JS throughout — no jQuery dependency**
+- **No dependencies** — plain JavaScript and CSS. Nothing pulled from a CDN, no jQuery required.
+- **Editor-safe** — re-renders cleanly on every panel change, with no duplicated markers and
+  no leaked event handlers.
+- **Themeable from settings** — every colour, size and radius you see comes from the widget's
+  own settings; the stylesheet holds no fixed visual values.
 
 ---
 
@@ -125,6 +88,15 @@ The version history in the file header reads like a list of things you only find
 | `assets/demo.gif` | Demo animation (embedded above) |
 | `assets/demo.mp4` | Full-quality demo recording — 14s |
 | `assets/logo.png` | Brand mark |
+
+---
+
+## Author
+
+**Aloysius Luo** · [TTTWorks](https://tttworks.com)
+
+Production WordPress engineering — performance, security, and custom Elementor widgets
+for sites that have to hold up in the real world.
 
 ---
 
